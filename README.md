@@ -1,4 +1,4 @@
-                    ♻️ A Full-Stack Web Platform for Efficient e-Waste Pickup, Tracking & Recycling
+                       ♻️ A Full-Stack Web Platform for Efficient e-Waste Pickup, Tracking & Recycling
 <p align="center">
   <img src="https://cdn-icons-png.flaticon.com/512/164/164379.png" width="140" />
 </p>

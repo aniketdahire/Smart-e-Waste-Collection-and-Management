@@ -1,4 +1,3 @@
-🌍 Smart e-Waste Collection & Management Web Application
 ♻️ A Full-Stack Web Platform for Efficient e-Waste Pickup, Tracking & Recycling
 <p align="center"> <img src="https://img.icons8.com/external-flatart-icons-flat-flatarticons/344/external-recycle-ecology-flatart-icons-flat-flatarticons.png" width="140" /> </p> <p align="center"> <b>Java Spring Boot</b> • <b>React/Angular</b> • <b>MySQL</b> • <b>JWT Security</b> • <b>Google Maps API</b> • <b>Cloudinary</b> </p>
 

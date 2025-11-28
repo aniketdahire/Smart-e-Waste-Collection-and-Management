@@ -4,7 +4,6 @@
 ![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?style=for-the-badge&logo=springboot)
 ![React](https://img.shields.io/badge/React-blue?style=for-the-badge&logo=react)
-![Angular](https://img.shields.io/badge/Angular-red?style=for-the-badge&logo=angular)
 ![MySQL](https://img.shields.io/badge/MySQL-5.7-blue?style=for-the-badge&logo=mysql)
 ![JWT](https://img.shields.io/badge/JWT-Security-purple?style=for-the-badge&logo=jsonwebtokens)
 ![Google Maps](https://img.shields.io/badge/Google%20Maps-API-important?style=for-the-badge&logo=googlemaps)

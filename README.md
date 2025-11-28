@@ -26,4 +26,3 @@ The platform enables:
 
 🔹 Smart algorithms to assign the nearest collector
 
-This project is designed for companies & municipalities aiming to digitalize e-waste handling.

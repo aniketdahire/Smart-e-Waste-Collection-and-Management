@@ -1,6 +1,8 @@
                                 ♻️ A Full-Stack Web Platform for Efficient e-Waste Pickup, Tracking & Recycling
-<p align="center"> <img src="<img width="512" height="512" alt="image" src="https://github.com/user-attachments/assets/ce32501e-0250-496c-b087-db37bd4e0131" />
-" width="140" /> </p> <p align="center"> <b>Java Spring Boot</b> • <b>React/Angular</b> • <b>MySQL</b> • <b>JWT Security</b> • <b>Google Maps API</b> • <b>Cloudinary</b> </p>
+<p align="center">
+  <img src="https://cdn-icons-png.flaticon.com/512/164/164379.png" width="140" />
+</p>
+ <p align="center"> <b>Java Spring Boot</b> • <b>React/Angular</b> • <b>MySQL</b> • <b>JWT Security</b> • <b>Google Maps API</b> • <b>Cloudinary</b> </p>
 
 ![Java](https://img.shields.io/badge/Java-17-orange?style=for-the-badge&logo=java)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?style=for-the-badge&logo=springboot)

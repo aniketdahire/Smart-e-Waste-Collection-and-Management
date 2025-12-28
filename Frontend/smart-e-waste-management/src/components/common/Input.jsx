@@ -7,10 +7,13 @@ const Input = ({
   type = 'text', 
   error, 
   className = '', 
+  readOnly = false,
   ...props 
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === 'password';
+
+ 
 
   return (
     <div className={`w-full ${className}`}>
@@ -31,10 +34,16 @@ const Input = ({
             text-gray-900 placeholder-gray-400
             focus:ring-2 focus:ring-green-500/20 focus:border-green-500
             transition-all duration-200 outline-none
-            ${error ? 'border-red-300 focus:border-red-500 focus:ring-red-200' : 'border-gray-200'}
+            ${error 
+              ? 'border-red-300 bg-red-50 text-red-900 focus:ring-2 focus:ring-red-200' 
+              : readOnly 
+                ? 'cursor-not-allowed bg-gray-100 text-gray-500 border-gray-200 focus:border-gray-200'
+                : 'border-gray-200 bg-gray-50/30 text-gray-900 focus:border-green-500 focus:ring-4 focus:ring-green-500/10'
+            }
             ${isPassword ? 'pr-12' : ''}
           `}
           {...props}
+          readOnly={readOnly}
         />
         {isPassword && (
           <button

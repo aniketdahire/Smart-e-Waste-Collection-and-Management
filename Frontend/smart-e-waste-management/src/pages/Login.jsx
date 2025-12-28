@@ -1,11 +1,56 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
-import { ArrowRight, Chrome, Github } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import authIllustration from '../assets/auth-illustration.png';
+import authService from '../services/authService';
+import { useToast } from '../context/ToastContext';
 
 const Login = () => {
+  const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const handleChange = (e) => {
+    setCredentials({ ...credentials, [e.target.id]: e.target.value });
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await authService.login(credentials.username, credentials.password);
+      
+      if (response.success) {
+        if (response.mustResetPassword) {
+            toast.success('Please set a new password.', 3000, "bottom-center");
+            navigate('/reset-password', { 
+                state: { 
+                    username: credentials.username, 
+                    tempPassword: credentials.password 
+                } 
+            });
+            return;
+        }
+
+        toast.success(response.message || 'Welcome back!', 3000, "bottom-center");
+        // Redirect based on role
+        if (response.role === 'ROLE_ADMIN') {
+           navigate('/admin');
+        } else {
+           navigate('/dashboard');
+        }
+      } else {
+        toast.error(response.message || 'Login failed. Please check your credentials.', 3000, "bottom-center");
+      }
+    } catch (error) {
+      toast.error('Login Error: ' + (error.response?.data?.message || 'Server not responding'), 3000, "bottom-center");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 lg:p-8 overflow-hidden">
       <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-6xl min-h-[400px] lg:h-[620px] relative overflow-hidden flex border border-gray-100">
@@ -56,17 +101,37 @@ const Login = () => {
               <div className="relative flex justify-center text-sm"><span className="px-4 bg-white text-gray-400">Or continue with</span></div>
             </div> */}
 
-            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
-              <Input id="email" label="Email Address" placeholder="name@example.com" type="email" />
+            <form className="space-y-5" onSubmit={handleLogin}>
+              <Input 
+                 id="username" 
+                 label="Email Address" 
+                 placeholder="name@example.com" 
+                 type="text"
+                 value={credentials.username}
+                 onChange={handleChange}
+                 required
+              />
               <div>
-                <Input id="password" label="Password" placeholder="••••••••" type="password" />
+                <Input 
+                   id="password" 
+                   label="Password" 
+                   placeholder="••••••••" 
+                   type="password"
+                   value={credentials.password}
+                   onChange={handleChange}
+                   required
+                />
                 <div className="flex justify-end mt-2">
                    <a href="#" className="text-sm font-medium text-green-600 hover:text-green-500">Forgot password?</a>
                 </div>
               </div>
-              <Button size="lg" className="w-full rounded-xl py-3 text-lg shadow-lg shadow-green-200 hover:shadow-green-300 transform hover:-translate-y-0.5 transition-all">
-                Sign In
-                <ArrowRight className="w-5 h-5 ml-2" />
+              <Button 
+                size="lg" 
+                className="w-full rounded-xl py-3 text-lg shadow-lg shadow-green-200 hover:shadow-green-300 transform hover:-translate-y-0.5 transition-all"
+                disabled={loading}
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
+                {!loading && <ArrowRight className="w-5 h-5 ml-2" />}
               </Button>
             </form>
 

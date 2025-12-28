@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
 import { Recycle, Menu, X } from 'lucide-react';
+import authService from '../../services/authService';
+import { useToast } from '../../context/ToastContext';
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  
+  const location = useLocation();
+  const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -15,6 +22,20 @@ const Navbar = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Check auth state on route change
+  useEffect(() => {
+     const currentUser = authService.getCurrentUser();
+     setUser(currentUser);
+  }, [location]);
+
+  const handleLogout = () => {
+     authService.logout();
+     setUser(null);
+     toast.info('Logged out successfully', 3000, "bottom-center");
+     navigate('/login');
+     setAuthDropdownOpen(false);
+  };
 
   return (
     <header 
@@ -31,7 +52,7 @@ const Navbar = () => {
             <Recycle className="w-6 h-6" />
           </div>
           <span className={`text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-700 ${!scrolled && 'lg:text-gray-900'}`}>
-            EcoVault
+            Smart E-Waste
           </span>
         </Link>
         
@@ -49,38 +70,61 @@ const Navbar = () => {
           ))}
           
           <div className="relative">
-            <Button 
-              onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
-              size="md" 
-              className="rounded-full px-6 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
-            >
-              Get Started
-            </Button>
-            
-            {/* Dropdown Menu */}
-            {authDropdownOpen && (
-              <div 
-                className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-fade-in-up origin-top-right"
-                onMouseLeave={() => setAuthDropdownOpen(false)}
-              >
-                <div className="flex flex-col p-1">
-                  <Link 
-                    to="/login" 
-                    className="px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 rounded-lg transition-colors text-left"
-                    onClick={() => setAuthDropdownOpen(false)}
+            {user ? (
+               <div className="flex items-center gap-4">
+                 {user.role === 'ROLE_ADMIN' && (
+                     <Link to="/admin">
+                        <Button size="sm" variant="ghost" className="text-gray-600 hover:text-green-600">
+                           Dashboard
+                        </Button>
+                     </Link>
+                 )}
+                 <Button 
+                   onClick={handleLogout}
+                   size="md" 
+                   className="rounded-full px-6 bg-gray-100 text-gray-900 hover:bg-gray-200"
+                 >
+                   Logout
+                 </Button>
+               </div>
+            ) : (
+                <>
+                <Button 
+                  onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
+                  size="md" 
+                  className="rounded-full px-6 bg-gray-900 text-white hover:bg-gray-800 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+                >
+                  Get Started
+                </Button>
+                
+                {/* Dropdown Menu */}
+                {authDropdownOpen && (
+                  <div 
+                    className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-fade-in-up origin-top-right"
+                    onMouseLeave={() => setAuthDropdownOpen(false)}
                   >
-                    Login
-                  </Link>
-                  <Link 
-                    to="/register" 
-                    className="px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 rounded-lg transition-colors text-left"
-                    onClick={() => setAuthDropdownOpen(false)}
-                  >
-                    Register
-                  </Link>
-                </div>
-              </div>
+                    <div className="flex flex-col p-1">
+                      <Link 
+                        to="/login" 
+                        className="px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 rounded-lg transition-colors text-left"
+                        onClick={() => setAuthDropdownOpen(false)}
+                      >
+                        Login
+                      </Link>
+                      <Link 
+                        to="/register" 
+                        className="px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-green-600 rounded-lg transition-colors text-left"
+                        onClick={() => setAuthDropdownOpen(false)}
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  </div>
+                )}
+                </>
             )}
+            
+            
           </div>
         </nav>
 
@@ -116,16 +160,24 @@ const Navbar = () => {
           ))}
           
           <div className="flex flex-col gap-4 mt-8 w-64">
-            <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-              <Button size="lg" variant="outline" className="w-full rounded-full text-lg border-2">
-                Login
-              </Button>
-            </Link>
-            <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-              <Button size="lg" className="w-full rounded-full text-lg shadow-xl">
-                Register
-              </Button>
-            </Link>
+            {!user ? (
+                <>
+                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                  <Button size="lg" variant="outline" className="w-full rounded-full text-lg border-2">
+                    Login
+                  </Button>
+                </Link>
+                <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
+                  <Button size="lg" className="w-full rounded-full text-lg shadow-xl">
+                    Register
+                  </Button>
+                </Link>
+                </>
+            ) : (
+                <Button onClick={handleLogout} size="lg" className="w-full rounded-full text-lg shadow-xl">
+                  Logout
+                </Button>
+            )}
           </div>
         </div>
       </div>

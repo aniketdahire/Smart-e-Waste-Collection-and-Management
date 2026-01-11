@@ -8,6 +8,9 @@ import VerifyEmail from './pages/VerifyEmail.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
 import AdminDashboard from './pages/Admin/admindashboard.jsx';
 import UserDashboard from './pages/User/UserDashboard.jsx';
+import RequestCollection from './pages/Collection/RequestCollection';
+import MyRequests from './pages/Collection/MyRequests';
+import History from './pages/Collection/History';
 import UserProfile from './pages/User/UserProfile.jsx';
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
@@ -35,6 +38,9 @@ function App() {
           {/* User Protected Route */}
           <Route element={<ProtectedRoute role="ROLE_USER" />}>
              <Route path="/dashboard" element={<UserDashboard />} />
+             <Route path="/request-collection" element={<RequestCollection />} />
+             <Route path="/my-requests" element={<MyRequests />} />
+             <Route path="/history" element={<History />} />
              <Route path="/profile" element={<UserProfile />} />
           </Route>
 

@@ -54,7 +54,7 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(auth -> auth
 
                                                 // ✅ PUBLIC
-                                                .requestMatchers("/api/public/**", "/h2-console/**")
+                                                .requestMatchers("/api/public/**", "/h2-console/**", "/uploads/**")
                                                 .permitAll()
 
                                                 // ✅ ADMIN APIs

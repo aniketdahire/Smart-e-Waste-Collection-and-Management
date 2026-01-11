@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, User, Recycle, History, LogOut, Menu, X, Settings, Bell, ChevronDown } from 'lucide-react';
+import { LayoutDashboard, User, Recycle, History, LogOut, Menu, X, Settings, Bell, ChevronDown, Clock } from 'lucide-react';
 import authService from '../../services/authService';
 import { useToast } from '../../context/ToastContext';
 
@@ -40,10 +40,9 @@ const UserLayout = ({ children }) => {
 
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { name: 'Request Pickup', path: '/request-pickup', icon: <Recycle className="w-5 h-5" /> },
+    { name: 'Request Pickup', path: '/request-collection', icon: <Recycle className="w-5 h-5" /> },
+    { name: 'My Requests', path: '/my-requests', icon: <Clock className="w-5 h-5" /> },
     { name: 'History', path: '/history', icon: <History className="w-5 h-5" /> },
-    // Removed "My Profile" from sidebar as requested
-    { name: 'Settings', path: '/settings', icon: <Settings className="w-5 h-5" /> },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -159,14 +158,6 @@ const UserLayout = ({ children }) => {
                             >
                                 <User className="w-4 h-4" />
                                 My Profile
-                            </Link>
-                            <Link 
-                                to="/settings" 
-                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors"
-                                onClick={() => setShowProfileMenu(false)}
-                            >
-                                <Settings className="w-4 h-4" />
-                                Settings
                             </Link>
                             
                             <div className="border-t border-gray-50 mt-1 pt-1">

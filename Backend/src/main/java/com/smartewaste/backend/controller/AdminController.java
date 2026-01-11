@@ -130,4 +130,59 @@ public class AdminController {
         return ResponseEntity.ok(dto);
     }
 
+    // ============================
+    // REQUEST MANAGEMENT
+    // ============================
+
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.smartewaste.backend.repository.CollectionRequestRepository requestRepository;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.smartewaste.backend.service.EmailService emailService;
+
+    // 1. GET ALL REQUESTS
+    @GetMapping("/requests")
+    public ResponseEntity<List<com.smartewaste.backend.entity.CollectionRequest>> getAllRequests() {
+        return ResponseEntity.ok(requestRepository.findAll(org.springframework.data.domain.Sort
+                .by(org.springframework.data.domain.Sort.Direction.DESC, "createdAt")));
+    }
+
+    // 2. REJECT REQUEST
+    @PutMapping("/requests/{id}/reject")
+    public ResponseEntity<String> rejectRequest(@PathVariable Long id,
+            @RequestBody java.util.Map<String, String> payload) {
+        return requestRepository.findById(id).map(req -> {
+            req.setStatus(com.smartewaste.backend.enums.RequestStatus.REJECTED);
+            requestRepository.save(req);
+
+            String reason = payload.getOrDefault("reason", "No reason provided.");
+            emailService.sendRequestRejectedEmail(req.getUser().getEmail(), req.getUser().getFullName(), reason);
+
+            return ResponseEntity.ok("Request rejected successfully.");
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
+    // 3. SCHEDULE PICKUP (ACCEPT)
+    @PutMapping("/requests/{id}/schedule")
+    public ResponseEntity<String> schedulePickup(@PathVariable Long id,
+            @RequestBody com.smartewaste.backend.entity.CollectionRequest scheduleData) {
+        return requestRepository.findById(id).map(req -> {
+            req.setStatus(com.smartewaste.backend.enums.RequestStatus.IN_PROGRESS);
+            req.setPickupDate(scheduleData.getPickupDate());
+            req.setPickupTime(scheduleData.getPickupTime());
+            req.setPickupPersonnel(scheduleData.getPickupPersonnel());
+
+            requestRepository.save(req);
+
+            emailService.sendPickupScheduledEmail(
+                    req.getUser().getEmail(),
+                    req.getUser().getFullName(),
+                    req.getPickupDate(),
+                    req.getPickupTime(),
+                    req.getPickupPersonnel());
+
+            return ResponseEntity.ok("Pickup scheduled successfully.");
+        }).orElse(ResponseEntity.notFound().build());
+    }
+
 }

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, User, Recycle, History, LogOut, Menu, X, Settings, ChevronDown, Clock } from 'lucide-react';
+import { LayoutDashboard, LogOut, Menu, X, ChevronDown, User } from 'lucide-react';
 import authService from '../../services/authService';
 import { useToast } from '../../context/ToastContext';
-
 import userService from '../../services/userService';
 
-const UserLayout = ({ children }) => {
+const PersonnelLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [userInitial, setUserInitial] = useState('U');
+  const [userInitial, setUserInitial] = useState('P');
   const location = useLocation();
   const navigate = useNavigate();
   const toast = useToast();
@@ -18,17 +17,14 @@ const UserLayout = ({ children }) => {
     const fetchUserInitial = async () => {
       try {
         const response = await userService.getProfile();
-        // Handle both response.data structure (if full axios response) or direct data
         const data = response.data || response;
         if (data.fullName) {
             setUserInitial(data.fullName.charAt(0).toUpperCase());
         }
       } catch (error) {
         console.error("Failed to load user initial", error);
-        // data might not be loaded yet or token invalid, keep default 'U'
       }
     };
-
     fetchUserInitial();
   }, []);
 
@@ -39,10 +35,7 @@ const UserLayout = ({ children }) => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
-    { name: 'Request Pickup', path: '/request-collection', icon: <Recycle className="w-5 h-5" /> },
-    { name: 'My Requests', path: '/my-requests', icon: <Clock className="w-5 h-5" /> },
-    { name: 'History', path: '/history', icon: <History className="w-5 h-5" /> },
+    { name: 'Dashboard', path: '/personnel-dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
   ];
 
   const isActive = (path) => location.pathname === path;
@@ -65,14 +58,14 @@ const UserLayout = ({ children }) => {
       >
         <div className="h-full flex flex-col">
           {/* Logo */}
-          <div className="h-20 flex items-center px-8 border-b border-gray-50">
-            <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-200">
-              E
+          <div className="h-20 flex items-center px-8 border-b border-gray-50 bg-emerald-600">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
+              P
             </div>
-            <span className="ml-3 text-xl font-bold text-gray-800 tracking-tight">Smart E-Waste</span>
+            <span className="ml-3 text-xl font-bold text-white tracking-tight">Staff Portal</span>
             <button 
                 onClick={() => setIsOpen(false)} 
-                className="ml-auto lg:hidden text-gray-400 hover:text-gray-600"
+                className="ml-auto lg:hidden text-white/70 hover:text-white"
             >
                 <X className="w-6 h-6" />
             </button>
@@ -101,6 +94,13 @@ const UserLayout = ({ children }) => {
               </Link>
             ))}
           </div>
+          
+          <div className="p-4 border-t border-gray-100">
+              <button onClick={handleLogout} className="flex items-center gap-3 w-full px-4 py-3 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors">
+                  <LogOut className="w-5 h-5" />
+                  Sign Out
+              </button>
+          </div>
         </div>
       </aside>
 
@@ -118,11 +118,11 @@ const UserLayout = ({ children }) => {
               </button>
            </div>
 
-           {/* Spacer for desktop to push content right */}
            <div className="hidden lg:block"></div>
 
            <div className="flex items-center gap-4 sm:gap-6">
-              {/* Profile Dropdown */}
+            
+
               <div className="relative">
                 <button 
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
@@ -144,16 +144,16 @@ const UserLayout = ({ children }) => {
                             <div className="px-4 py-3 border-b border-gray-50 mb-1">
                                 <p className="text-sm font-semibold text-gray-800">My Account</p>
                             </div>
-                           
+                            
                             <Link 
-                                to="/profile" 
+                                to="/personnel-profile" 
                                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 hover:text-emerald-600 transition-colors"
                                 onClick={() => setShowProfileMenu(false)}
                             >
                                 <User className="w-4 h-4" />
                                 My Profile
                             </Link>
-                            
+
                             <div className="border-t border-gray-50 mt-1 pt-1">
                                 <button
                                     onClick={handleLogout}
@@ -178,4 +178,4 @@ const UserLayout = ({ children }) => {
   );
 };
 
-export default UserLayout;
+export default PersonnelLayout;

@@ -38,6 +38,11 @@ const RequestCollection = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 10 * 1024 * 1024) { // 10MB Limit
+        toast.error("Please upload a smaller image (max 10MB)", 4000, "bottom-center");
+        e.target.value = null; // Reset input
+        return;
+      }
       setImage(file);
       setImagePreview(URL.createObjectURL(file));
     }
@@ -80,7 +85,7 @@ const RequestCollection = () => {
 
   return (
     <UserLayout>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-8xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800">Schedule Pickup</h1>
           <p className="text-gray-500 mt-2">Enter details about your e-waste for collection.</p>
@@ -266,7 +271,7 @@ const RequestCollection = () => {
                       type="file" 
                       accept="image/*"
                       onChange={handleImageChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     />
                     {imagePreview ? (
                       <div className="relative">

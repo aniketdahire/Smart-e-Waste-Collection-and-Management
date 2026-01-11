@@ -62,4 +62,31 @@ public class CollectionController {
             return ResponseEntity.internalServerError().body("Critical Error: " + e.getMessage());
         }
     }
+
+    // ✅ GET ASSIGNED REQUESTS (FOR PERSONNEL)
+    @GetMapping("/assigned")
+    public ResponseEntity<?> getAssignedRequests() {
+        try {
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            return ResponseEntity.ok(collectionService.getAssignedRequests(username));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Client Error: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Server Error: " + e.toString());
+        }
+    }
+
+    // ✅ UPDATE REQUEST STATUS (FOR PERSONNEL)
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateRequestStatus(@PathVariable Long id, @RequestParam String status) {
+        try {
+            return ResponseEntity.ok(collectionService.updateRequestStatus(id, status));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
 }

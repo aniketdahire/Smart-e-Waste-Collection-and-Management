@@ -3,7 +3,6 @@ import userService from '../../services/userService';
 import { useToast } from '../../context/ToastContext';
 import Button from '../../components/common/Button';
 import Input from '../../components/common/Input';
-import UserLayout from '../../components/layout/UserLayout';
 import { Upload, User, Edit2, Save } from 'lucide-react';
 
 const UserProfile = () => {
@@ -81,7 +80,7 @@ const UserProfile = () => {
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
   return (
-    <UserLayout>
+    <>
         <div className="mb-8">
             <h1 className="text-2xl font-bold text-gray-800">My Profile</h1>
             <p className="text-gray-500">Manage your personal information and documents.</p>
@@ -204,7 +203,7 @@ const UserProfile = () => {
                  </div>
             </div>
         </div>
-    </UserLayout>
+    </>
   );
 };
 

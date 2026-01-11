@@ -61,9 +61,9 @@ public class SecurityConfig {
                                                 .requestMatchers("/api/admin/**")
                                                 .hasRole("ADMIN")
 
-                                                // ✅ USER APIs (ADMIN ALSO ALLOWED)
+                                                // ✅ USER APIs (ADMIN & PERSONNEL ALSO ALLOWED)
                                                 .requestMatchers("/api/user/**")
-                                                .hasAnyRole("USER", "ADMIN")
+                                                .hasAnyRole("USER", "ADMIN", "PERSONNEL")
 
                                                 .anyRequest()
                                                 .authenticated())
@@ -83,7 +83,7 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
                 configuration.setAllowedOrigins(List.of(
                                 "http://localhost:5173",
-                                "https://smart-e-waste-collection-and-management-br16h43o8.vercel.app"));
+                                "https://smart-e-waste-management.vercel.app"));
                 configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowedHeaders(List.of("*"));
                 configuration.setAllowCredentials(true);

@@ -36,6 +36,9 @@ public class CollectionRequest {
     private LocalDate pickupDate;
     private LocalTime pickupTime;
 
+    // ✅ NEW: Assigned Pickup Personnel
+    private String pickupPersonnel;
+
     @Enumerated(EnumType.STRING)
     private RequestStatus status = RequestStatus.PENDING;
 

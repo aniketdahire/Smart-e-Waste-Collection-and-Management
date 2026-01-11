@@ -66,10 +66,10 @@ public class AuthService {
                                                 null);
                         }
 
-                        String role = user.getRoles()
-                                        .stream()
+                        String role = user.getRoles().stream()
+                                        .filter(r -> r.toUpperCase().contains("ADMIN"))
                                         .findFirst()
-                                        .orElse("ROLE_USER");
+                                        .orElse(user.getRoles().stream().findFirst().orElse("ROLE_USER"));
 
                         String token = jwtUtil.generateToken(user.getUsername(), role);
 

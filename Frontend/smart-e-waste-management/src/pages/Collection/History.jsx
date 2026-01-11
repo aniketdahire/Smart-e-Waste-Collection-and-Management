@@ -56,7 +56,7 @@ const HistoryPage = () => {
 
     return (
         <UserLayout>
-            <div className="max-w-6xl mx-auto px-4 md:px-0">
+            <div className="max-w-8xl mx-auto px-4 md:px-0">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">

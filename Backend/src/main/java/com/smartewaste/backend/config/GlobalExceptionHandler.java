@@ -20,6 +20,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(org.springframework.web.multipart.MaxUploadSizeExceededException.class)
+    public ResponseEntity<?> handleMaxSizeException(
+            org.springframework.web.multipart.MaxUploadSizeExceededException exc) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "File Too Large");
+        error.put("message", "File size exceeds the maximum limit of 10MB.");
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex) {
         Map<String, String> error = new HashMap<>();

@@ -6,12 +6,26 @@ import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import VerifyEmail from './pages/VerifyEmail.jsx';
 import ResetPassword from './pages/ResetPassword.jsx';
+
+// Admin Pages
+import AdminLayout from './components/layout/AdminLayout.jsx';
+import UserLayout from './components/layout/UserLayout.jsx';
 import AdminDashboard from './pages/Admin/admindashboard.jsx';
+import UserManagement from './pages/Admin/UserManagement.jsx';
+import RequestManagement from './pages/Admin/RequestManagement.jsx';
+import PersonnelManagement from './pages/Admin/PersonnelManagement.jsx';
+
+// User Pages
 import UserDashboard from './pages/User/UserDashboard.jsx';
 import RequestCollection from './pages/Collection/RequestCollection';
 import MyRequests from './pages/Collection/MyRequests';
 import History from './pages/Collection/History';
 import UserProfile from './pages/User/UserProfile.jsx';
+
+// Personnel Pages
+import PersonnelDashboard from './pages/Personnel/PersonnelDashboard';
+import PersonnelLayout from './components/layout/PersonnelLayout.jsx';
+
 import ProtectedRoute from './components/common/ProtectedRoute.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 
@@ -32,7 +46,12 @@ function App() {
           
           {/* Admin Protected Route */}
           <Route element={<ProtectedRoute role="ROLE_ADMIN" />}>
-             <Route path="/admin" element={<AdminDashboard />} />
+             <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="requests" element={<RequestManagement />} />
+                <Route path="personnel" element={<PersonnelManagement />} />
+             </Route>
           </Route>
 
           {/* User Protected Route */}
@@ -41,8 +60,13 @@ function App() {
              <Route path="/request-collection" element={<RequestCollection />} />
              <Route path="/my-requests" element={<MyRequests />} />
              <Route path="/history" element={<History />} />
-             <Route path="/profile" element={<UserProfile />} />
+             <Route path="/profile" element={<UserLayout><UserProfile /></UserLayout>} />
           </Route>
+
+
+          {/* Personnel Routes */}
+          <Route path="/personnel-dashboard" element={<PersonnelLayout><PersonnelDashboard /></PersonnelLayout>} />
+          <Route path="/personnel-profile" element={<PersonnelLayout><UserProfile /></PersonnelLayout>} />
 
         </Routes>
       </Router>

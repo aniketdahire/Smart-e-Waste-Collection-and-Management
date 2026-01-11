@@ -9,4 +9,7 @@ public interface CollectionRequestRepository extends JpaRepository<CollectionReq
     List<CollectionRequest> findByUser(UserAccount user);
 
     List<CollectionRequest> findByUserOrderByCreatedAtDesc(UserAccount user);
+
+    // ✅ Find requests assigned to specific personnel
+    List<CollectionRequest> findByPickupPersonnel(String pickupPersonnel);
 }

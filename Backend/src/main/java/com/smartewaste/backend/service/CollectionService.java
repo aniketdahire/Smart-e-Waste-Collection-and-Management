@@ -75,4 +75,22 @@ public class CollectionService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return requestRepository.findByUserOrderByCreatedAtDesc(user);
     }
+
+    // ✅ Get Requests Assigned to Personnel
+    public List<CollectionRequest> getAssignedRequests(String username) {
+        UserAccount user = userRepository.findByEmailIgnoreCase(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // We match by the Full Name stored in request's pickupPersonnel field
+        return requestRepository.findByPickupPersonnel(user.getFullName());
+    }
+
+    // ✅ Update Request Status
+    public CollectionRequest updateRequestStatus(Long requestId, String status) {
+        CollectionRequest request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Request not found"));
+
+        request.setStatus(com.smartewaste.backend.enums.RequestStatus.valueOf(status));
+        return requestRepository.save(request);
+    }
 }

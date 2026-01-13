@@ -257,6 +257,8 @@ const getStatusColor = (status) => {
     case 'VERIFIED': return 'bg-emerald-50 text-emerald-700 border-emerald-100';
     case 'PENDING': return 'bg-amber-50 text-amber-700 border-amber-100';
     case 'REJECTED': return 'bg-red-50 text-red-700 border-red-100';
+    case 'IN_PROGRESS': return 'bg-blue-50 text-blue-700 border-blue-100';
+    case 'COMPLETED': return 'bg-green-50 text-green-700 border-green-100';
     default: return 'bg-gray-100 text-gray-800';
   }
 };

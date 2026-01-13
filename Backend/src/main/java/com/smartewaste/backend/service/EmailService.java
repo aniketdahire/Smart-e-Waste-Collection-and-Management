@@ -164,4 +164,43 @@ public class EmailService {
                 baseTemplate("Password Changed", content));
     }
 
+    // ================= PASSWORD RESET LINK =================
+    public void sendPasswordResetEmail(String email, String resetLink) {
+
+        String content = "<p>You requested to reset your Smart E-Waste account password.</p>" +
+                "<p>Click the button below to set a new password. This link is valid for 30 minutes.</p>" +
+                "<div style='text-align:center; margin:25px 0;'>" +
+                "<a href='" + resetLink + "' style='background:#2e7d32; color:#fff; padding:12px 25px; border-radius:6px; text-decoration:none;'>Reset Password</a>" +
+                "</div>" +
+                "<p>If you did not initiate this request, please ignore this email.</p>";
+
+        sendHtmlEmail(
+                email,
+                "Reset Your Smart E-Waste Password",
+                baseTemplate("Password Reset Request", content));
+    }
+
+    // ================= PICKUP COMPLETED =================
+    public void sendPickupCompletedEmail(
+            String email,
+            String userName,
+            String deviceType,
+            LocalDate date,
+            LocalTime time) {
+
+        String content = "<p>Dear <b>" + userName + "</b>,</p>" +
+                "<p>Thank you for recycling with Smart E-Waste! Your pickup has been completed successfully.</p>" +
+                "<div style='background:#e8f5e9; padding:15px; border-left:4px solid #2e7d32; margin:15px 0;'>" +
+                "<p><b>Device:</b> " + deviceType + "</p>" +
+                "<p><b>Collected On:</b> " + (date != null ? date : "—") + "</p>" +
+                "<p><b>Time:</b> " + (time != null ? time : "—") + "</p>" +
+                "</div>" +
+                "<p>We appreciate your contribution towards responsible recycling.</p>";
+
+        sendHtmlEmail(
+                email,
+                "Pickup Completed – Thank You!",
+                baseTemplate("Pickup Completed", content));
+    }
+
 }

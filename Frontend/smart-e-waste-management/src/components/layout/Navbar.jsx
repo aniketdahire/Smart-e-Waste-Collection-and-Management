@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../common/Button';
-import { Recycle, Menu, X } from 'lucide-react';
+import { Recycle, Menu, X, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 import authService from '../../services/authService';
 import { useToast } from '../../context/ToastContext';
 
@@ -16,18 +17,24 @@ const Navbar = () => {
   const toast = useToast();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+     const handleScroll = () => {
+       setScrolled(window.scrollY > 20);
+     };
+     window.addEventListener('scroll', handleScroll);
+     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Check auth state on route change
   useEffect(() => {
      const currentUser = authService.getCurrentUser();
      setUser(currentUser);
   }, [location]);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   const handleLogout = () => {
      authService.logout();
@@ -37,9 +44,18 @@ const Navbar = () => {
      setAuthDropdownOpen(false);
   };
 
+  const mainNav = [
+    { label: 'Home', path: '/' },
+    { label: 'Services', path: '/services' },
+    { label: 'Impact', path: '/impact' },
+    { label: 'Contact', path: '/contact' },
+  ];
+
+  const closeMobileMenu = () => setMobileMenuOpen(false);
+
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b ${
+      className={`fixed top-0 left-0 right-0 z-[1200] transition-all duration-500 border-b ${
         scrolled 
           ? 'bg-white/80 backdrop-blur-xl border-gray-200 py-3 shadow-sm' 
           : 'bg-transparent border-transparent py-4'
@@ -58,13 +74,13 @@ const Navbar = () => {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-10">
-          {['Home', 'Services', 'Impact', 'Contact'].map((item) => (
+          {mainNav.map((item) => (
             <Link 
-              key={item}
-              to={`/${item.toLowerCase()}`} 
+              key={item.label}
+              to={item.path}
               className="text-sm font-medium text-gray-600 hover:text-green-600 transition-colors relative group py-2"
             >
-              {item}
+              {item.label}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-green-500 rounded-full transition-all duration-300 group-hover:w-full"></span>
             </Link>
           ))}
@@ -129,60 +145,90 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Menu Toggle */}
-        <div className="md:hidden z-50">
+        <div className="md:hidden" style={{ zIndex: 1300 }}>
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-gray-800 hover:text-green-600 transition-colors relative z-50"
+            className="p-2 text-gray-800 hover:text-green-600 transition-colors relative"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
 
-        {/* Mobile Menu Overlay */}
-        <div 
-          className={`fixed inset-0 bg-white z-40 flex flex-col items-center justify-center space-y-8 transition-opacity duration-300 ${
-            mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-          }`}
-        >
-          {['Home', 'Services', 'Impact', 'Contact'].map((item) => (
-             <a 
-               key={item}
-               href={`#`}
-               onClick={(e) => {
-                 e.preventDefault();
-                 setMobileMenuOpen(false);
-               }}
-               className="text-3xl font-bold text-gray-900 hover:text-green-600 transition-colors"
-             >
-               {item}
-             </a>
-          ))}
-          
-          <div className="flex flex-col gap-4 mt-8 w-64">
-            {!user ? (
-                <>
-                <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                  <Button size="lg" variant="outline" className="w-full rounded-full text-lg border-2">
-                    Login
-                  </Button>
+       {/* Mobile Menu Overlay */}
+      {mobileMenuOpen &&
+        createPortal(
+          <div className="md:hidden fixed inset-0 z-[1250]">
+            <div className="absolute inset-0 bg-black/60" onClick={closeMobileMenu} />
+
+            <aside className="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-slate-950 text-white flex flex-col py-6 px-5 gap-6 overflow-y-auto shadow-2xl shadow-black/40 z-[1300]">
+              <div className="flex items-center justify-between">
+                <Link to="/" onClick={closeMobileMenu} className="flex items-center gap-2">
+                  <Recycle className="w-6 h-6 text-green-400" />
+                  <span className="text-lg font-semibold">Smart E-Waste</span>
                 </Link>
-                <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                  <Button size="lg" className="w-full rounded-full text-lg shadow-xl">
-                    Register
-                  </Button>
-                </Link>
-                </>
-            ) : (
-                <Button onClick={handleLogout} size="lg" className="w-full rounded-full text-lg shadow-xl">
-                  Logout
-                </Button>
-            )}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-};
+
+                <button onClick={closeMobileMenu}>
+                  <X className="w-6 h-6 text-white" />
+                </button>
+              </div>
+
+              <nav className="flex flex-col gap-4 border-t border-white/10 pt-4">
+                {mainNav.map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.path}
+                    onClick={closeMobileMenu}
+                    className="text-lg font-medium text-white/80 hover:text-white"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+
+              <div className="mt-auto border-t border-white/10 pt-4 space-y-5">
+                {!user ? (
+                  <>
+                    <Link to="/login" onClick={closeMobileMenu}>
+                      <Button className="w-full bg-green-500 hover:bg-gray-700 rounded-xl mb-3">
+                        Login
+                      </Button>
+                    </Link>
+
+                    <Link to="/register" onClick={closeMobileMenu}>
+                      <Button className="w-full bg-green-500 hover:bg-gray-700 rounded-xl">
+                        Create Account
+                      </Button>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    {user.role === 'ROLE_ADMIN' && (
+                      <Link to="/admin" onClick={closeMobileMenu}>
+                        <Button className="w-full bg-gray-800 rounded-xl">Admin Dashboard</Button>
+                      </Link>
+                    )}
+
+                    <Button
+                      onClick={() => {
+                        handleLogout();
+                        closeMobileMenu();
+                      }}
+                      className="w-full bg-red-500 hover:bg-red-400 rounded-xl"
+                    >
+                      Logout
+                    </Button>
+                  </>
+                )}
+              </div>
+            </aside>
+          </div>,
+          document.body
+        )}
+
+            </div>
+          </header>
+        );
+      };
 
 export default Navbar;

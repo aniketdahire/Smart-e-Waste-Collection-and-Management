@@ -112,13 +112,16 @@ const MyRequests = () => {
 
         {/* DETAILS MODAL */}
         {selectedRequest && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" onClick={() => setSelectedRequest(null)}>
+            <div 
+                className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+                onClick={() => setSelectedRequest(null)}
+            >
                 <div 
-                    className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200"
+                    className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
                     onClick={(e) => e.stopPropagation()} // Prevent close on modal click
                 >
                     {/* Modal Image Header */}
-                    <div className="relative h-64 bg-gray-100">
+                    <div className="relative h-56 sm:h-72 bg-gray-100 flex-shrink-0">
                         <img 
                             className="w-full h-full object-contain" 
                             src={`http://localhost:8080/uploads/${selectedRequest.imagePath}`} 
@@ -137,19 +140,19 @@ const MyRequests = () => {
                     </div>
 
                     {/* Modal Content */}
-                    <div className="p-8">
-                        <div className="mb-6 flex justify-between items-start">
+                    <div className="flex-1 overflow-y-auto px-5 sm:px-8 py-6 space-y-6">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                             <div>
-                                <h2 className="text-2xl font-bold text-gray-800 mb-1">{selectedRequest.deviceType}</h2>
-                                <p className="text-gray-500 text-lg">{selectedRequest.brand} • {selectedRequest.model}</p>
+                                <h2 className="text-2xl font-bold text-gray-800">{selectedRequest.deviceType}</h2>
+                                <p className="text-gray-500 text-base sm:text-lg">{selectedRequest.brand} • {selectedRequest.model}</p>
                             </div>
-                            <div className="mt-1 shrink-0">
+                            <div className="sm:mt-1 shrink-0">
                                 {getStatusBadge(selectedRequest.status)}
                             </div>
                         </div>
                         
 
-                        <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="bg-gray-50 p-4 rounded-xl">
                                 <p className="text-xs text-gray-400 uppercase font-bold tracking-wider mb-1">Condition</p>
                                 <p className="font-semibold text-gray-700">{selectedRequest.condition || 'N/A'}</p>
@@ -171,9 +174,9 @@ const MyRequests = () => {
                         <div className="space-y-4">
                             <div>
                                 <h4 className="flex items-center gap-2 font-semibold text-gray-700 mb-2">
-                                    <MapPin className="w-5 h-5 text-emerald-500" /> Pickup Location
+                                    <MapPin className="w-5 h-5 text-emerald-500 flex-shrink-0" /> Pickup Location
                                 </h4>
-                                <p className="text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                                <p className="text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100 text-sm sm:text-base leading-relaxed">
                                     {selectedRequest.address}
                                 </p>
                             </div>
@@ -181,15 +184,15 @@ const MyRequests = () => {
                             {selectedRequest.remarks && (
                                 <div>
                                     <h4 className="flex items-center gap-2 font-semibold text-gray-700 mb-2">
-                                        <Package className="w-5 h-5 text-emerald-500" /> Remarks
+                                        <Package className="w-5 h-5 text-emerald-500 flex-shrink-0" /> Remarks
                                     </h4>
-                                    <p className="text-gray-600 italic">
+                                    <p className="text-gray-600 italic text-sm sm:text-base">
                                         "{selectedRequest.remarks}"
                                     </p>
                                 </div>
                             )}
 
-                             <div className="pt-4 border-t border-gray-100 flex justify-between items-center text-sm text-gray-400">
+                             <div className="pt-4 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-400">
                                 <span>Request ID: {selectedRequest.id}</span>
                                 <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {new Date(selectedRequest.createdAt).toLocaleString()}</span>
                             </div>

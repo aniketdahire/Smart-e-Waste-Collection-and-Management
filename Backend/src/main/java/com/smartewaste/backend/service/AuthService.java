@@ -118,7 +118,9 @@ public class AuthService {
 
                 userRepository.save(user);
 
-                emailService.sendPasswordChangedConfirmation(user.getEmail());
+                emailService.sendPasswordChangedConfirmation(
+                                user.getEmail(),
+                                user.getFullName() != null ? user.getFullName() : user.getUsername());
         }
 
         // ✅ FORGOT PASSWORD
@@ -160,6 +162,8 @@ public class AuthService {
 
                 userRepository.save(user);
 
-                emailService.sendPasswordChangedConfirmation(email);
+                emailService.sendPasswordChangedConfirmation(
+                                email,
+                                user.getFullName() != null ? user.getFullName() : user.getUsername());
         }
 }

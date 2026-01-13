@@ -108,7 +108,7 @@ const UserManagement = () => {
                           </div>
                           <div className="ml-3">
                             <p className="text-sm font-semibold text-gray-900">{user.fullName}</p>
-                            <p className="text-xs text-gray-400">ID: #{user.id}</p>
+                            {/* <p className="text-xs text-gray-400">ID: #{user.id}</p> */}
                           </div>
                         </div>
                       </td>
@@ -233,7 +233,7 @@ const UserManagement = () => {
                           </div>
                           <div>
                               <h3 className="text-xl font-bold">{selectedUser.fullName}</h3>
-                              <p className="text-emerald-400 text-sm font-medium">#{selectedUser.id}</p>
+                              {/* <p className="text-emerald-400 text-sm font-medium">#{selectedUser.id}</p> */}
                           </div>
                       </div>
                   </div>

@@ -1,11 +1,18 @@
 import api from './api';
 
+const emitAuthChange = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('auth-change'));
+  }
+};
+
 const authService = {
   login: async (username, password) => {
     const response = await api.post('/public/login', { username, password });
     if (response.data.token) {
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('role', response.data.role);
+      emitAuthChange();
     }
     return response.data;
   },
@@ -30,6 +37,7 @@ const authService = {
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    emitAuthChange();
   },
 
   getCurrentUser: () => {

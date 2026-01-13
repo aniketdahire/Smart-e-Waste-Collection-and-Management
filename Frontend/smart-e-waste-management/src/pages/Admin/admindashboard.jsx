@@ -113,23 +113,24 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="space-y-8 bg-gray-50/30 min-h-screen font-sans">
+    <div className="space-y-6 sm:space-y-8 bg-gray-50/30 min-h-screen font-sans">
         
         {/* HEADER */}
-        <div className="flex justify-between items-end">
-            <div>
-                {/* <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Dashboard</h2> */}
-                <p className="text-gray-500 mt-1 font-medium">Overview of system performance</p>
-            </div>
-            <div className="text-right hidden md:block">
-                <p className="text-sm font-semibold text-indigo-600 bg-indigo-50 px-4 py-2 rounded-lg">
-                    {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
-            </div>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div>
+              {/* <h2 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Dashboard</h2> */}
+              <p className="text-gray-500 mt-1 font-medium">Overview of system performance</p>
+          </div>
+          <div className="text-left sm:text-right">
+              <p className="text-xs sm:text-sm font-semibold text-indigo-600 bg-indigo-50 px-3 py-2 rounded-lg inline-flex items-center gap-2">
+                  <span className="hidden xs:inline">Today</span>
+                  {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+          </div>
         </div>
 
         {/* KPI CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
           <StatCard 
             title="Total Users" 
             value={users.length} 
@@ -159,18 +160,18 @@ const AdminDashboard = () => {
         </div>
 
         {/* CHARTS ROW 1 */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
             
             {/* ACTIVITY TREND */}
-            <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100">
-                <div className="flex items-center justify-between mb-6">
+            <div className="lg:col-span-2 bg-white p-4 sm:p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
                     <h3 className="text-lg font-bold text-gray-800">Weekly Collection Analytics</h3>
-                    <div className="flex items-center gap-2 text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full uppercase tracking-wide">
+                    <div className="inline-flex items-center gap-2 text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1.5 rounded-full uppercase tracking-wide w-max">
                         <TrendingUp className="w-3 h-3" />
                         Live Data
                     </div>
                 </div>
-                <div className="h-[320px] w-full">
+                <div className="h-[260px] sm:h-[320px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={trendData}>
                             <defs>
@@ -193,9 +194,9 @@ const AdminDashboard = () => {
             </div>
 
             {/* STATUS DISTRIBUTION */}
-            <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-800 mb-6">Request Distribution</h3>
-                <div className="h-[320px] w-full relative flex justify-center items-center">
+            <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 sm:mb-6">Request Distribution</h3>
+                <div className="h-[260px] sm:h-[320px] w-full relative flex justify-center items-center">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
@@ -225,12 +226,12 @@ const AdminDashboard = () => {
         </div>
 
         {/* CHARTS ROW 2: WASTE TYPES & RECENT ACTIVITY */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
             
             {/* WASTE BY CATEGORY */}
-             <div className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-800 mb-6">Top Collected Items</h3>
-                <div className="h-[300px] w-full">
+             <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 sm:mb-6">Top Collected Items</h3>
+                <div className="h-[260px] sm:h-[300px] w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={wasteData} layout="vertical" margin={{ left: 10 }}>
                             <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f9fafb" />
@@ -248,11 +249,12 @@ const AdminDashboard = () => {
             </div>
 
             {/* RECENT ACTIVITY */}
-            <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100 flex flex-col">
-                <h3 className="text-lg font-bold text-gray-800 mb-6">Recent Transactions</h3>
-                <div className="flex-1 overflow-auto">
-                    <table className="w-full text-left">
-                        <thead>
+            <div className="lg:col-span-2 bg-white p-4 sm:p-6 rounded-2xl shadow-lg shadow-gray-100/50 border border-gray-100 flex flex-col">
+                <h3 className="text-lg font-bold text-gray-800 mb-4 sm:mb-6">Recent Transactions</h3>
+                <div className="flex-1">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left min-w-[600px]">
+                        <thead className="bg-gray-50">
                             <tr className="text-xs text-gray-400 font-bold uppercase tracking-wider border-b border-gray-100">
                                 <th className="pb-4 pl-2">User</th>
                                 <th className="pb-4">Item</th>
@@ -289,7 +291,8 @@ const AdminDashboard = () => {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                      </table>
+                    </div>
                 </div>
             </div>
         </div>

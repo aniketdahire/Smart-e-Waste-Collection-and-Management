@@ -64,7 +64,7 @@ const PersonnelDashboard = () => {
     if (loading) return <div className="flex justify-center items-center h-full text-gray-500">Loading tasks...</div>;
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
             
             {/* PENDING TASKS SECTION */}
             <div>
@@ -72,7 +72,7 @@ const PersonnelDashboard = () => {
                     <Package className="w-5 h-5 text-emerald-600" /> 
                     Assigned Pickups <span className="text-sm font-normal text-gray-500 ml-2">({pendingRequests.length} pending)</span>
                  </h2>
-                 <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
                     {pendingRequests.length > 0 ? (
                         pendingRequests.map(req => (
                             <TaskCard 
@@ -96,7 +96,7 @@ const PersonnelDashboard = () => {
                     <Clock className="w-5 h-5 text-gray-400" /> 
                     Completed History <span className="text-sm font-normal text-gray-500 ml-2">({historyRequests.length} total)</span>
                  </h2>
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                     {historyRequests.map(req => (
                         <CompactHistoryCard key={req.id} req={req} onClick={() => handleViewDetails(req)} />
                     ))}
@@ -105,19 +105,24 @@ const PersonnelDashboard = () => {
 
             {/* DETAILS MODAL */}
             {isModalOpen && selectedRequest && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200 relative max-h-[90vh] overflow-y-auto">
-                        
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+                    onClick={() => setIsModalOpen(false)}
+                >
+                    <div 
+                        className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200"
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         {/* Modal Header */}
-                        <div className="relative h-48 bg-gray-100">
+                        <div className="relative h-56 sm:h-72 bg-gray-100 flex-shrink-0">
                             {selectedRequest.imagePath ? (
-                                <img src={`http://localhost:8080/uploads/${selectedRequest.imagePath}`} alt="Device" className="w-full h-full object-cover" />
+                                <img src={`http://localhost:8080/uploads/${selectedRequest.imagePath}`} alt="Device" className="w-full h-full object-contain" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
                             )}
                             <button 
                                 onClick={() => setIsModalOpen(false)}
-                                className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/70 text-white rounded-full transition-colors"
+                                className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-colors"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -128,29 +133,37 @@ const PersonnelDashboard = () => {
                         </div>
 
                         {/* Modal Content */}
-                        <div className="p-6 space-y-6">
+                        <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6">
                             
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="p-3 bg-gray-50 rounded-xl">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="p-4 bg-gray-50 rounded-xl">
                                     <p className="text-xs text-gray-500 uppercase font-bold">Quantity</p>
                                     <p className="font-semibold text-gray-800">{selectedRequest.quantity} Unit(s)</p>
                                 </div>
-                                <div className="p-3 bg-gray-50 rounded-xl">
+                                <div className="p-4 bg-gray-50 rounded-xl">
                                     <p className="text-xs text-gray-500 uppercase font-bold">Condition</p>
                                     <p className="font-semibold text-gray-800">{selectedRequest.condition}</p>
+                                </div>
+                                <div className="p-4 bg-gray-50 rounded-xl">
+                                    <p className="text-xs text-gray-500 uppercase font-bold">Pickup Date</p>
+                                    <p className="font-semibold text-gray-800">{selectedRequest.pickupDate || 'Not Scheduled'}</p>
+                                </div>
+                                <div className="p-4 bg-gray-50 rounded-xl">
+                                    <p className="text-xs text-gray-500 uppercase font-bold">Pickup Time</p>
+                                    <p className="font-semibold text-gray-800">{selectedRequest.pickupTime || 'Not Scheduled'}</p>
                                 </div>
                             </div>
 
                             <div className="space-y-4">
                                 <div className="flex items-start gap-3">
-                                    <MapPin className="w-5 h-5 text-emerald-600 mt-1" />
+                                    <MapPin className="w-5 h-5 text-emerald-600 mt-1 flex-shrink-0" />
                                     <div>
                                         <p className="text-sm font-bold text-gray-700">Pickup Address</p>
                                         <p className="text-sm text-gray-600 leading-relaxed">{selectedRequest.address}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-start gap-3">
-                                    <Calendar className="w-5 h-5 text-emerald-600 mt-1" />
+                                    <Calendar className="w-5 h-5 text-emerald-600 mt-1 flex-shrink-0" />
                                     <div>
                                         <p className="text-sm font-bold text-gray-700">Scheduled Time</p>
                                         <p className="text-sm text-gray-600">{selectedRequest.pickupDate} at {selectedRequest.pickupTime}</p>
@@ -166,7 +179,7 @@ const PersonnelDashboard = () => {
 
                             {/* Actions (Only if Pending) */}
                             {(selectedRequest.status === 'PENDING' || selectedRequest.status === 'IN_PROGRESS') && (
-                                <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
                                     <button 
                                         onClick={() => handleStatusUpdate(selectedRequest.id, 'REJECTED')}
                                         className="py-3 px-4 bg-red-50 text-red-600 font-bold rounded-xl hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
@@ -203,7 +216,7 @@ const PersonnelDashboard = () => {
 const TaskCard = ({ req, onClick, onAction }) => {
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all group cursor-pointer" onClick={onClick}>
-            <div className="relative h-40 overflow-hidden">
+            <div className="relative h-36 sm:h-40 overflow-hidden">
                 {req.imagePath ? (
                     <img src={`http://localhost:8080/uploads/${req.imagePath}`} alt="Device" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 ) : (
@@ -223,18 +236,19 @@ const TaskCard = ({ req, onClick, onAction }) => {
                     </div>
                 </div>
 
-                <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                <div className="flex flex-col sm:flex-row gap-3" onClick={(e) => e.stopPropagation()}>
                     <button 
                          onClick={() => onAction(req.id, 'COMPLETED')}
-                        className="flex-1 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-200"
+                        className="w-full sm:flex-1 py-2.5 bg-emerald-600 text-white rounded-lg text-sm font-semibold hover:bg-emerald-700 transition-colors shadow-md shadow-emerald-200"
                     >
                         Collect
                     </button>
                     <button 
                         onClick={() => onAction(req.id, 'REJECTED')}
-                        className="px-3 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100"
+                        className="w-full sm:w-auto px-3 py-2.5 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors border border-red-100 flex items-center justify-center gap-2"
                     >
                         <XCircle className="w-5 h-5" />
+                        <span className="sm:hidden text-sm font-semibold">Reject</span>
                     </button>
                 </div>
             </div>

@@ -2,6 +2,7 @@ package com.smartewaste.backend.service;
 
 import com.smartewaste.backend.entity.CollectionRequest;
 import com.smartewaste.backend.entity.UserAccount;
+import com.smartewaste.backend.enums.RequestStatus;
 import com.smartewaste.backend.repository.CollectionRequestRepository;
 import com.smartewaste.backend.repository.UserAccountRepository;
 import org.springframework.stereotype.Service;
@@ -21,13 +22,17 @@ public class CollectionService {
 
     private final CollectionRequestRepository requestRepository;
     private final UserAccountRepository userRepository;
+    private final EmailService emailService;
 
     // Directory to save uploaded images
     private final String UPLOAD_DIR = "uploads/";
 
-    public CollectionService(CollectionRequestRepository requestRepository, UserAccountRepository userRepository) {
+    public CollectionService(CollectionRequestRepository requestRepository,
+                             UserAccountRepository userRepository,
+                             EmailService emailService) {
         this.requestRepository = requestRepository;
         this.userRepository = userRepository;
+        this.emailService = emailService;
     }
 
     public CollectionRequest createRequest(
@@ -90,7 +95,19 @@ public class CollectionService {
         CollectionRequest request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
 
-        request.setStatus(com.smartewaste.backend.enums.RequestStatus.valueOf(status));
-        return requestRepository.save(request);
+        RequestStatus newStatus = RequestStatus.valueOf(status.toUpperCase());
+        request.setStatus(newStatus);
+        CollectionRequest saved = requestRepository.save(request);
+
+        if (newStatus == RequestStatus.COMPLETED && request.getUser() != null) {
+            emailService.sendPickupCompletedEmail(
+                    request.getUser().getEmail(),
+                    request.getUser().getFullName(),
+                    request.getDeviceType(),
+                    request.getPickupDate(),
+                    request.getPickupTime());
+        }
+
+        return saved;
     }
 }
